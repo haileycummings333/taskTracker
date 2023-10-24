@@ -2,6 +2,7 @@ package com.example.tasktrackerapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     EditText task_input;
     EditText owner_input;
+    Button button;
+    TaskDBProvider taskProvider;
 
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
@@ -29,9 +32,15 @@ public class MainActivity extends AppCompatActivity {
             tastText = tastText.trim();
             if(tastText.length()>0) {
                 Task newTask = new Task(tastText, owner);
+                ContentValues values = new ContentValues();
+                values.put(TaskDBProvider.COLUMN1_NAME, tastText);
+                values.put((TaskDBProvider.COLUMN2_NAME, owner));
+
+                taskProvider.insert(TaskDBProvider.AUTHORITY, values);
+
                 addToList(newTask);
             }else{
-                Toast.makeText(getApplicationContext(),"Cannot ass an empty task", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Cannot add an empty task", Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -42,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.task_list);
         task_input = findViewById(R.id.input_et);
         owner_input = findViewById(R.id.owner_et);
+        button = findViewById(R.id.submitButton);
+        button.setOnClickListener(listener);
     }
 
     public void addToList(Task t){
